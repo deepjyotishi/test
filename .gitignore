@@ -1,0 +1,5 @@
+/uploads/
+*.log
+.DS_Store
+.vscode/
+fix_bug.py
