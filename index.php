@@ -7,7 +7,7 @@ $message = isset($_GET['message']) ? trim($_GET['message']) : '';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css?v=4">
-    <title>SECL Land Outsee | Welcome</title>
+    <title>File Management | Welcome</title>
     <style>
         .hero {
             min-height: 100vh;
@@ -65,9 +65,9 @@ $message = isset($_GET['message']) ? trim($_GET['message']) : '';
 <body style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
     <div class="hero">
         <div class="hero-card">
-            <img src="coal.png" alt="SECL Logo" class="hero-logo">
-            <h1>SECL Land Outsee</h1>
-            <p>The premium portal for efficient land record management, tracking, and inter-departmental forwarding.</p>
+            <img src="coal.png" alt="Logo" class="hero-logo">
+            <h1>File Management</h1>
+            <p>The premium portal for efficient file management, tracking, and inter-departmental forwarding.</p>
             
             <?php if ($message): ?>
                 <div class="message" style="margin-bottom: 30px;"><?php echo htmlspecialchars($message); ?></div>
@@ -75,7 +75,6 @@ $message = isset($_GET['message']) ? trim($_GET['message']) : '';
             
             <div>
                 <a class="btn" href="login.php">Login to Portal</a>
-                <a class="btn btn-secondary" href="signup.php">Create Account</a>
             </div>
         </div>
     </div>

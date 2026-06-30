@@ -23,7 +23,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($row) {
                     $otp = rand(100000, 999999);
                     $_SESSION['reset_data'] = compact('user_id', 'email', 'new_password', 'otp');
-                    $dev_otp_message = "DEV MODE: Your OTP is $otp";
+                    
+                    // In a production environment, send this via mail()
+                    // mail($email, "Password Reset OTP", "Your OTP is $otp");
+                    error_log("Password Reset OTP for $email: $otp");
+                    
+                    $dev_otp_message = "An OTP has been sent to your registered email address.";
                     $step = 2;
                 } else {
                     $error = 'No matching User ID and Email found.';
@@ -49,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         } else {
             $error = "Invalid OTP. Please try again.";
-            $dev_otp_message = "DEV MODE: Your OTP is " . ($_SESSION['reset_data']['otp'] ?? '');
+            // $dev_otp_message = "DEV MODE: Your OTP is " . ($_SESSION['reset_data']['otp'] ?? '');
         }
     }
 }
@@ -59,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forgot Password | SECL Land Outsee</title>
+    <title>Forgot Password | File Management</title>
     <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body class="login-page" style="background:#f9f9f9;">
@@ -77,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <?php if ($dev_otp_message && $step === 2): ?>
-            <div style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 15px; margin-bottom: 20px; border-radius: 4px; text-align: center; font-weight: bold;">
+            <div style="background-color: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; padding: 15px; margin-bottom: 20px; border-radius: 4px; text-align: center; font-weight: bold;">
                 <?php echo htmlspecialchars($dev_otp_message); ?>
             </div>
         <?php endif; ?>

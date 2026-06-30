@@ -49,9 +49,9 @@ html, body {
 }
 
 /* =========================================
-   Dashboard / Record Container
+   Dashboard / File Container
    ========================================= */
-.record-container {
+.file-container {
     max-width: 1300px;
     width: 96%;
     margin: 40px auto;
@@ -64,7 +64,7 @@ html, body {
     animation: fadeInUp 0.5s ease-out backwards;
 }
 
-.record-container h2 {
+.file-container h2 {
     color: #1e293b;
     margin-bottom: 25px;
     font-weight: 700;

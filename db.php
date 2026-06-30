@@ -22,6 +22,16 @@ try {
         // Ensure the ID starts from 10000
         $pdo->exec("ALTER TABLE `data` AUTO_INCREMENT = 10000");
 
+        $subjectCheck = $pdo->query("SHOW COLUMNS FROM `data` LIKE 'subject'");
+        if ($subjectCheck->rowCount() === 0) {
+            $pdo->exec("ALTER TABLE `data` ADD COLUMN `subject` TEXT NULL AFTER `id`");
+        }
+
+        $dateCheck = $pdo->query("SHOW COLUMNS FROM `data` LIKE 'date'");
+        if ($dateCheck->rowCount() === 0) {
+            $pdo->exec("ALTER TABLE `data` ADD COLUMN `date` DATE NULL AFTER `subject`");
+        }
+
         $doc1Check = $pdo->query("SHOW COLUMNS FROM `data` LIKE 'doc1'");
         if ($doc1Check->rowCount() === 0) {
             $pdo->exec("ALTER TABLE `data` ADD COLUMN `doc1` VARCHAR(255) NULL");
@@ -131,15 +141,24 @@ function require_login() {
 // Helper function to render a common navigation bar
 function render_nav() {
     $level = $_SESSION['Level'] ?? 'Unknown';
+    $role = $_SESSION['role'] ?? 'user';
     $userId = $_SESSION['user_id'] ?? 'User';
     echo '<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+          <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
           <style>
              .select2-container .select2-selection--single { height: 38px !important; border: 1px solid #ced4da !important; border-radius: 4px !important; display: flex !important; align-items: center !important; }
              .select2-container--default .select2-selection--single .select2-selection__arrow { height: 36px !important; }
              .select2-container--default .select2-selection--single .select2-selection__rendered { line-height: 36px !important; }
+            .navbar { background-color: #004085; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+            .nav-brand { font-size: 20px; font-weight: bold; letter-spacing: 1px; }
+            .nav-links a { color: white; text-decoration: none; margin-left: 20px; font-weight: 500; transition: color 0.2s; }
+            .nav-links a:hover { color: #cce5ff; }
+            .nav-btn { background: #0069d9; padding: 8px 15px; border-radius: 4px; border: 1px solid #005cbf; }
+            .nav-btn:hover { background: #005cbf; }
+            .nav-btn-danger { background: #dc3545; border-color: #c82333; }
+            .nav-btn-danger:hover { background: #c82333; }
           </style>
-          <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-          <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
           <script>
             const originalSet = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, "value").set;
             Object.defineProperty(HTMLSelectElement.prototype, "value", {
@@ -158,11 +177,11 @@ function render_nav() {
           </script>
           <div class="navbar" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
             <div style="flex: 1; text-align: left;">
-                <span class="nav-brand">SECL Land Outsee - ' . htmlspecialchars(strtoupper($level)) . ' Portal</span>
+                <span class="nav-brand"><a href="dashboard.php" style="color:white; text-decoration:none;">File Management</a></span>
             </div>
-            <div style="flex: 1; text-align: center;">
-                <a href="edit.php" class="nav-btn" style="background:#28a745; display:inline-block; text-decoration:none; padding: 8px 20px; font-weight: bold; border-radius: 4px; color: white;">Create New Record</a>
-            </div>
+            <div style="flex: 1; text-align: center;">' . 
+            ($role === 'admin' ? '<a href="edit.php" class="nav-btn" style="background:#28a745; display:inline-block; text-decoration:none; padding: 8px 20px; font-weight: bold; border-radius: 4px; color: white;">Create New File</a>' : '') 
+            . '</div>
             <div class="nav-links" style="flex: 1; text-align: right; display: flex; justify-content: flex-end; align-items: center;">
                 <span style="margin-right: 15px;">Logged in as: ' . htmlspecialchars($userId) . '</span>
                 <a href="logout.php" class="nav-btn nav-btn-danger">Logout</a>

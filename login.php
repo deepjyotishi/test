@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Please enter both user ID and password.';
     } else {
         try {
-            $stmt = $pdo->prepare("SELECT `user-id`, `password`, `Level` FROM `land-table` WHERE `user-id` = ?");
+            $stmt = $pdo->prepare("SELECT `user-id`, `password`, `Level`, `role` FROM `land-table` WHERE `user-id` = ?");
             $stmt->execute([$user_id]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -20,23 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (password_verify($password, $row['password']) || $password === $row['password']) {
                     $_SESSION['user_id'] = $row['user-id'];
                     $_SESSION['Level']   = $row['Level'];
+                    $_SESSION['role']    = $row['role'] ?? 'user';
                     
-                    $pages = [
-                        'unit' => 'unit.php',
-                        'area' => 'area.php',
-                        'LnR'  => 'lnr.php',
-                        'man'  => 'man.php',
-                        'comm' => 'comm.php',
-                        'HR'   => 'hr.php',
-                        'CMD'  => 'cmd.php',
-                    ];
-
-                    if (isset($pages[$row['Level']])) {
-                        header('Location: ' . $pages[$row['Level']]);
-                        exit;
-                    } else {
-                        $error = 'Access denied: unrecognized account level.';
-                    }
+                    header('Location: dashboard.php');
+                    exit;
                 } else {
                     $error = 'Invalid user ID or password.';
                 }
@@ -56,12 +43,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css?v=2">
-    <title>Login | SECL Land Outsee</title>
+    <title>Login | File Management</title>
 </head>
 <body class="login-page">
-    <img src="coal.png" alt="secl" class="se">
+    <img src="coal.png" alt="logo" class="se">
     <div class="container">
-        <h1>SECL Land Outsee login</h1>
+        <h1>File Management Login</h1>
         <p>Enter your user ID and password.</p>
         <?php if ($error): ?>
             <p class="error"><?php echo htmlspecialchars($error); ?></p>
